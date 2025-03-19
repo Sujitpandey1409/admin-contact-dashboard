@@ -1,31 +1,29 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = React.useState('');
-  const { page } = useParams();
+  const location = useLocation();
+  const [currentPage, setCurrentPage] = useState('');
+
   useEffect(() => {
-    if (page) {
-      console.log("Page route from URL:", page);
-      setCurrentPage(page);
-    }
-  }, []);
+    const pageFromPath = location.pathname.split('/')[1]; // get the route after '/'
+    setCurrentPage(pageFromPath);
+  }, [location.pathname]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
     navigate(`/${page.toLowerCase()}`);
   };
 
   const getNavItemClasses = (page) => {
-    const base = "cursor-pointer";
+    const base = "cursor-pointer px-2 py-1";
     const active = "text-blue-600 border-b-2 border-blue-600";
-    return `${base} ${currentPage === page ? active : ""}`;
+    return `${base} ${currentPage === page ? active : "text-gray-600 hover:text-blue-500"}`;
   };
 
   return (
     <div className="flex justify-between items-center px-6 py-3 border-b bg-white">
-      <div className="flex space-x-6 text-gray-700 text-sm font-medium">
+      <div className="flex space-x-6 text-sm font-medium">
         <span className="cursor-pointer">Dashboard</span>
         <span className="cursor-pointer">Orders</span>
         <span className="cursor-pointer">Tasks</span>
